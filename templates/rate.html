@@ -5,6 +5,7 @@
     <title>Rate</title>
 </head>
 <body>
+    <a href='/api/'>Main</a>
     <form action="{% url 'coworking:rate' %}" method="post" class="form-example">
         {% csrf_token %}
         <div class="form-example">
