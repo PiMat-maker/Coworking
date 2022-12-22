@@ -2,16 +2,17 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django import forms
 from django.views.decorators.http import require_POST
+from . import models
 
 from Coworking.models import Coworking, OccupiedSpaceInfo
 
 
 class CreateRequest(forms.Form):
     coworking_name = forms.ChoiceField(
-        choices=(('Kronva_2_floor', 'Kronverkskii 2-nd floor'),
-                 ('Kronva_3_floor', 'Kronverkskii 3-rd floor'),
-                 ('Lomo_2_floor', 'Lomonosova 2-nd floor'),
-                 ('Lomo_4_floor', 'Lomonosova 4-th floor'),
+        choices=(('Kronverkskii 2-nd floor', 'Kronverkskii 2-nd floor'),
+                 ('Kronverkskii 3-rd floor', 'Kronverkskii 3-rd floor'),
+                 ('Lomonosova 2-nd floor', 'Lomonosova 2-nd floor'),
+                 ('Lomonosova 4-th floor', 'Lomonosova 4-th floor'),
                  ),
     )
 
@@ -21,7 +22,7 @@ def create_request(request):
     f = CreateRequest(request.GET)
 
     if f.is_valid():
-        coworking_name = f.cleaned_data['coworking_name'].lower()
+        coworking_name = f.data.get('coworking_name')
         coworking = Coworking.objects.get(name=coworking_name)
         last_occupied_info = OccupiedSpaceInfo.objects.filter(coworking=coworking).order_by('-time')[0]
         free_place_number = coworking.places_number - last_occupied_info.places_occupied
@@ -33,10 +34,10 @@ def create_request(request):
 
 
 class Rate(forms.Form):
-    CHOICES = (('Kronva_2_floor', 'Kronverkskii 2-nd floor'),
-               ('Kronva_3_floor', 'Kronverkskii 3-rd floor'),
-               ('Lomo_2_floor', 'Lomonosova 2-nd floor'),
-               ('Lomo_4_floor', 'Lomonosova 4-th floor'),
+    CHOICES = (('Kronverkskii 2-nd floor', 'Kronverkskii 2-nd floor'),
+               ('Kronverkskii 3-rd floor', 'Kronverkskii 3-rd floor'),
+               ('Lomonosova 2-nd floor', 'Lomonosova 2-nd floor'),
+               ('Lomonosova 4-th floor', 'Lomonosova 4-th floor'),
                )
     coworking_name = forms.ChoiceField(choices=CHOICES)
     mark = forms.IntegerField(min_value=0, max_value=10)
@@ -49,6 +50,9 @@ def rate(request):
     if f.is_valid():
         coworking_name = f.cleaned_data['coworking_name'].lower()
         mark = f.cleaned_data['mark']
+        coworking = Coworking.objects.get(name=coworking_name)
+        rate = models.Rate(coworking=coworking, mark=mark)
+        rate.save()
         return render(request, 'rate.html', context={
             'answer': 'Thanks for your mark'
         })

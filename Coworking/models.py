@@ -13,7 +13,7 @@ class Coworking(models.Model):
 
 
 class OccupiedSpaceInfo(models.Model):
-    coworking = models.OneToOneField(to=Coworking, on_delete=models.CASCADE)
+    coworking = models.ForeignKey(to=Coworking, on_delete=models.CASCADE)
     places_occupied = models.IntegerField()
     time = models.DateTimeField(default=datetime.now())
 
