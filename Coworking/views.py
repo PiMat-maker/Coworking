@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from django import forms
 from django.views.decorators.http import require_POST
 from . import models
@@ -30,7 +29,9 @@ def create_request(request):
             'answer': f'Number of free places at {coworking_name}: {free_place_number}'
         })
 
-    return HttpResponse(f'No Hello world')
+    return render(request, 'request.html', context={
+            'answer': 'Something goes wrong. Try again'
+        })
 
 
 class Rate(forms.Form):
@@ -57,4 +58,6 @@ def rate(request):
             'answer': 'Thanks for your mark'
         })
 
-    return HttpResponse('Blabla')
+    return render(request, 'rate.html', context={
+            'answer': "Your mark has not been saved. Please try again"
+        })
