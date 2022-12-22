@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rate</title>
+</head>
+<body>
+    <form action="{% url 'coworking:rate' %}" method="post" class="form-example">
+        {% csrf_token %}
+        <div class="form-example">
+          <label for="coworking_name">Coworking name: </label>
+          <select name="coworking_name" id="name" required>
+              <option value="Kronva_2_floor">Kronverkskii 2-nd floor</option>
+              <option value="Kronva_3_floor">Kronverkskii 3-rd floor</option>
+              <option value="Lomo_2_floor">Lomonosova 2-nd floor</option>
+              <option value="Lomo_4_floor">Lomonosova 4-th floor</option>
+          </select>
+        </div>
+        <div>
+            <label for="mark">Mark:</label>
+            <input type="number" name="mark" value="5" min="0" max="10" required/>
+        </div>
+        <div class="form-example">
+          <input type="submit" value="Rate">
+        </div>
+    </form>
+    <div>
+        <p>{{ answer }}</p>
+    </div>
+</body>
+</html>
